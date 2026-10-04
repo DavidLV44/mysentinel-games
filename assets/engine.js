@@ -155,9 +155,14 @@
   function share() {
     var text = $("#screen-result").dataset.share;
     if (navigator.share) {
-      navigator.share({ text: text }).catch(function () {});
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(function () { flash("Résultat copié ! Colle-le où tu veux 😉"); });
+      navigator.share({ text: text }).catch(function () { copyText(text); });
+    } else {
+      copyText(text);
+    }
+  }
+  function copyText(text) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function () { flash("Résultat copié ! Colle-le où tu veux 😉"); }, function () { flash("Copie ce texte : " + text); });
     } else {
       flash("Copie ce texte : " + text);
     }
