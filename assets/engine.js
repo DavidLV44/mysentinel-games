@@ -47,7 +47,8 @@
     return m ? m[0] : s;
   }
   function fmt(n) { return String(Math.round(n * 2) / 2).replace(".", ","); }
-  function vibrate(p) { try { if (!reduce && navigator.vibrate) navigator.vibrate(p); } catch (e) { /* ignoré */ } }
+  function vibrate(p) { if (window.SFX) SFX.buzz(p); }
+  function snd(name, n, delay) { if (window.SFX) SFX.play(name, n, delay); }
 
   /* ---------- paroles de la mascotte ---------- */
   var SAY = {
@@ -111,8 +112,10 @@
   /* ---------- partie ---------- */
   function startRound(m) {
     mode = m;
-    var rnd = m === "daily" ? rng(hash(G.id + todayKey())) : Math.random;
-    deck = shuffle(G.questions, rnd).slice(0, G.roundSize);
+    var rnd = m === "daily" ? rng(hash(G.id + level + todayKey())) : Math.random;
+    var pool = G.questions.filter(function (q) { return !q.level || q.level === level; });
+    if (pool.length < G.roundSize) pool = G.questions;
+    deck = shuffle(pool, rnd).slice(0, G.roundSize);
     idx = 0; results = []; streak = 0;
     $("#screen-intro").classList.add("hidden");
     $("#screen-result").classList.add("hidden");
@@ -137,6 +140,8 @@
     if (streak >= 2) {
       s.classList.remove("hidden");
       $("#streakN").textContent = streak;
+      s.style.setProperty("--k", Math.min(streak, 8));
+      if (bump) snd("chime", streak - 2, 0.25);
       if (bump) { s.classList.remove("bump"); void s.offsetWidth; s.classList.add("bump"); }
     } else s.classList.add("hidden");
   }
@@ -159,10 +164,17 @@
     renderDots(); renderStreak(false);
   }
 
+  function revealMarks(ph) {
+    ph.classList.add("show-marks");
+    var ms = ph.querySelectorAll(".m");
+    for (var i = 0; i < ms.length && i < 4; i++) (function (i) { setTimeout(function () { snd("tick", i); }, reduce ? 0 : 120 + i * 250); })(i);
+    if (ms.length) { try { ms[0].scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); } catch (e) { /* ignoré */ } }
+  }
+
   function useHint() {
     if (answered || hintUsed) return;
     hintUsed = true;
-    $("#phoneWrap").firstChild.classList.add("show-marks");
+    revealMarks($("#phoneWrap").firstChild);
     $("#hintBox").innerHTML = '<div class="checklist"><b>4 questions à te poser :</b><ul>' +
       "<li>Qui écrit, et est-ce que je le connais ?</li><li>Y a-t-il une urgence ou une menace ?</li>" +
       "<li>Me demande-t-on de l'argent, un code ou un lien à ouvrir ?</li><li>Ai-je moi-même fait une demande ?</li></ul></div>";
@@ -176,6 +188,7 @@
     st.textContent = G.stamps[key] || key.toUpperCase();
     st.classList.add(key === G.answerKeys[0] ? "scam" : "legit");
     void st.offsetWidth; st.classList.add("show");
+    setTimeout(function () { snd(key === G.answerKeys[0] ? "stampScam" : "stampLegit"); vibrate(18); }, reduce ? 0 : 230);
   }
 
   function answer(choice) {
@@ -188,10 +201,10 @@
     $("#askBox").classList.add("hidden");
     stampOn(ph, q.answer);
     ph.classList.add(good ? "hop" : "shake");
-    vibrate(good ? 25 : [40, 60, 40]);
+    if (!good) { setTimeout(function () { snd("soft"); vibrate([12, 40, 12]); }, reduce ? 0 : 420); }
     var scamQ = q.answer === G.answerKeys[0];
     if (good) {
-      ph.classList.add("show-marks");
+      revealMarks(ph);
       commit(hintUsed ? "y" : "g");
       streak++;
       renderStreak(true);
@@ -208,6 +221,7 @@
     renderDots();
     var dots = $("#dots").children;
     if (dots[results.length - 1]) dots[results.length - 1].classList.add("pop");
+    snd("pop", results.length);
   }
 
   /* ---------- feuille du coach ---------- */
@@ -265,7 +279,7 @@
     document.querySelectorAll("#chips .chip").forEach(function (c) { c.disabled = true; });
     btn.classList.add(ok ? "right" : "wrong");
     commit(ok ? "y" : "r");
-    $("#phoneWrap").firstChild.classList.add("show-marks");
+    revealMarks($("#phoneWrap").firstChild);
     $("#rattrap").classList.add("hidden");
     $("#mascot").innerHTML = M.mascot(ok ? "happy" : "think");
     $("#coachHead").textContent = ok ? "Rattrapé !" : "Pas tout à fait…";
@@ -281,7 +295,17 @@
     var clues = $("#clues"); clues.innerHTML = "";
     (q.clues || []).forEach(function (c) { var li = document.createElement("li"); li.textContent = c; clues.appendChild(li); });
     $("#tipLine").textContent = q.tip ? "💡 " + q.tip : "";
-    var hasMore = (q.clues && q.clues.length) || q.tip;
+    var fb = $("#factBox");
+    if (q.fact) {
+      $("#factText").textContent = q.fact.t;
+      var fs = $("#factSrc"); fs.textContent = "Source : " + q.fact.src + " ↗"; fs.href = q.fact.url;
+      fb.classList.remove("hidden");
+      fb.classList.remove("fact-in"); void fb.offsetWidth; fb.classList.add("fact-in");
+    } else fb.classList.add("hidden");
+    var pl = $("#protectList"); pl.innerHTML = "";
+    (q.protect || []).forEach(function (t) { var li = document.createElement("li"); li.textContent = t; pl.appendChild(li); });
+    $("#protectBox").classList.toggle("hidden", !(q.protect && q.protect.length));
+    var hasMore = (q.clues && q.clues.length) || q.tip || (q.protect && q.protect.length);
     var open = level === "debutant";
     $("#more").classList.toggle("hidden", !(hasMore && open));
     var bm = $("#btnMore");
@@ -302,8 +326,17 @@
 
   function next() {
     if (stage === "rattrap") return;
-    if (idx < deck.length - 1) { idx++; renderQuestion(); window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); }
-    else showResult();
+    if (stage === "leaving") return;
+    var go = function () {
+      if (idx < deck.length - 1) { idx++; renderQuestion(); window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }); }
+      else showResult();
+    };
+    var ph = $("#phoneWrap").firstChild;
+    if (reduce || !ph) { go(); return; }
+    stage = "leaving";
+    ph.classList.add("leave");
+    $("#sheet").classList.add("sheet-out");
+    setTimeout(function () { $("#sheet").classList.remove("sheet-out"); go(); }, 190);
   }
 
   /* ---------- résultat ---------- */
@@ -347,6 +380,9 @@
     });
     $("#recapBox").classList.toggle("hidden", false);
     renderAffiliate();
+    for (var i = 0; i < results.length && i < 12; i++) snd("pop", i, 0.9 + i * 0.12);
+    snd("final", ratio >= .75 ? 1 : 0, 0.9 + results.length * 0.12 + 0.1);
+    vibrate([15, 40, 15, 40, 30]);
     if (ratio >= .75) setTimeout(function () { confetti(ratio === 1 ? 160 : 90, 300); }, 600);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -402,7 +438,7 @@
       if (stage !== "rattrap") return;
       document.querySelectorAll("#chips .chip").forEach(function (c) { c.disabled = true; });
       stage = "feedback"; commit("r");
-      $("#phoneWrap").firstChild.classList.add("show-marks");
+      revealMarks($("#phoneWrap").firstChild);
       $("#rattrap").classList.add("hidden");
       showExplanation(false);
     });

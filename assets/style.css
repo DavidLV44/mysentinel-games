@@ -390,7 +390,7 @@ footer a { color: var(--muted); }
   .grid-emoji span { animation: pop .5s cubic-bezier(.2, 1.4, .4, 1) both; }
   .hero-phone .phone { animation: floaty 5s ease-in-out infinite; }
   .hero-phone .stamp { opacity: 0; animation: stampLoop 5s ease-in-out infinite; }
-  .btn.pulse { animation: bump 1.6s ease-in-out infinite alternate; }
+  .btn.pulse { animation: btnBreath 2.4s ease-in-out infinite; }
 }
 @keyframes callPulse { 70% { box-shadow: 0 0 0 18px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
 @media (prefers-reduced-motion: reduce) {
@@ -415,3 +415,45 @@ footer a { color: var(--muted); }
 /* Le tampon grossit au début de l'animation : on le coupe aux bords de l'appareil (évite le défilement horizontal) */
 .phone, .phone-less { overflow: hidden; }
 .phone-wrap, .hero-phone { overflow-x: clip; }
+
+/* ---------- v3 : sons, faits divers, protections, douceur ---------- */
+.topbar nav { display: flex; align-items: center; gap: 12px; }
+.sfx-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--line, #d8e4e4); background: var(--card, #fff); color: inherit; font: inherit; font-size: .85rem; cursor: pointer; }
+.sfx-btn[aria-pressed="true"] { background: var(--teal); color: #fff; border-color: var(--teal); }
+@media (max-width: 520px) { .sfx-btn .lb { display: none; } .sfx-btn { padding: 0 14px; } }
+
+.fact { margin: 12px 0 4px; padding: 12px 14px; border-radius: 14px; background: var(--mid-soft, #fff6df); border-left: 4px solid var(--pop, #f0a500); font-size: .93rem; }
+.fact b { display: block; margin-bottom: 4px; }
+.fact p { margin: 0 0 6px; }
+.fact a { font-size: .82rem; color: inherit; text-decoration: underline; word-break: break-word; }
+.protect { margin-top: 10px; padding: 10px 14px; border-radius: 14px; background: color-mix(in srgb, var(--teal) 10%, transparent); }
+.protect ul { margin: 6px 0 0; padding-left: 20px; }
+.protect li { margin: 3px 0; }
+
+/* indice visuel quand l'écran du téléphone défile (ombres de défilement) */
+.sms-body, .dm-body, .mail-scroll {
+  background:
+    linear-gradient(#fff 30%, rgba(255,255,255,0)) 0 0 / 100% 30px no-repeat local,
+    linear-gradient(rgba(255,255,255,0), #fff 70%) 0 100% / 100% 30px no-repeat local,
+    radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.16), rgba(0,0,0,0)) 0 0 / 100% 10px no-repeat scroll,
+    radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.16), rgba(0,0,0,0)) 0 100% / 100% 10px no-repeat scroll;
+}
+
+.streak { transition: box-shadow .3s, transform .3s; box-shadow: 0 0 calc(var(--k, 0) * 2px) var(--pop); transform: scale(calc(1 + var(--k, 0) * .02)); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .phone.leave { animation: phoneOut .2s ease-in forwards; }
+  #sheet.sheet-out { animation: sheetOut .18s ease-in forwards; }
+  .fact.fact-in { animation: factIn .4s .15s cubic-bezier(.2, .9, .3, 1.1) both; }
+  .stamp.show { animation: stampDrop .55s cubic-bezier(.3, 1.3, .5, 1) both; }
+  .sms-body > *, .dm-body > * { animation: bubbleIn .35s cubic-bezier(.2, .9, .3, 1.15) both; }
+  .sms-body > :nth-child(2), .dm-body > :nth-child(2) { animation-delay: .09s; }
+  .sms-body > :nth-child(3), .dm-body > :nth-child(3) { animation-delay: .18s; }
+  .protect li { animation: factIn .35s both; }
+  .protect li:nth-child(2) { animation-delay: .1s; } .protect li:nth-child(3) { animation-delay: .2s; }
+}
+@keyframes phoneOut { to { opacity: 0; transform: translateX(-34px) scale(.97); } }
+@keyframes sheetOut { to { opacity: 0; transform: translateY(14px); } }
+@keyframes factIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes bubbleIn { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes btnBreath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }

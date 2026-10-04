@@ -17,7 +17,7 @@
   <header class="topbar">
     <div class="wrap">
       <a class="brand" href="../"><svg class="brand-logo" viewBox="0 0 100 110" aria-hidden="true"><path d="M50 6l38 13v30c0 28-17 46-38 55C29 95 12 77 12 49V19z" fill="#008080"/><path d="M50 14l30 10v25c0 22-13 37-30 45C33 86 20 71 20 49V24z" fill="#e6f4f4"/><ellipse cx="38" cy="44" rx="4.5" ry="5.5" fill="#0b3b3b"/><ellipse cx="62" cy="44" rx="4.5" ry="5.5" fill="#0b3b3b"/><path d="M38 56q12 12 24 0" fill="none" stroke="#0b3b3b" stroke-width="3.5" stroke-linecap="round"/></svg> MySentinel Games</a>
-      <nav><a href="../">Tous les jeux</a></nav>
+      <nav><button class="sfx-btn" type="button" data-sfx-toggle aria-pressed="false" aria-label="Activer ou couper les sons"><span class="ic" aria-hidden="true">🔇</span><span class="lb">Activer les sons</span></button><a href="../">Tous les jeux</a></nav>
     </div>
   </header>
 
@@ -29,16 +29,17 @@
         <p id="gameIntro"></p>
         <div class="card">
           <h3>Ton niveau</h3>
-          <p class="note" style="margin-bottom:0">On adapte les explications. Tu peux changer à tout moment.</p>
+          <p class="note" style="margin-bottom:0">Chaque niveau a ses propres messages, du plus évident au plus vicieux. Tu peux changer à tout moment.</p>
           <div class="levels" role="radiogroup" aria-label="Ton niveau">
-            <label class="lvl"><input type="radio" name="level" value="debutant"><span><b>🌱 Débutant</b><small>Je prends mon temps, explique-moi tout</small></span></label>
-            <label class="lvl"><input type="radio" name="level" value="inter" checked><span><b>🔍 Je me débrouille</b><small>L'essentiel, le détail si je veux</small></span></label>
-            <label class="lvl"><input type="radio" name="level" value="expert"><span><b>🛡️ Costaud</b><small>Va droit au but</small></span></label>
+            <label class="lvl"><input type="radio" name="level" value="debutant"><span><b>🌱 Débutant</b><small>Les pièges classiques, tout expliqué</small></span></label>
+            <label class="lvl"><input type="radio" name="level" value="inter" checked><span><b>🔍 Je me débrouille</b><small>Faux liens, annonces, faux conseillers</small></span></label>
+            <label class="lvl"><input type="radio" name="level" value="expert"><span><b>🛡️ Costaud</b><small>Deepfakes, voix IA, cas tordus</small></span></label>
           </div>
           <div class="btn-row" style="margin-top:14px">
             <button class="btn pulse" id="btnDaily" type="button">Partie du jour</button>
             <button class="btn secondary" id="btnFree" type="button">Partie libre</button>
           </div>
+          <p class="note"><button class="link-btn" type="button" data-sfx-toggle aria-pressed="false"><span class="ic" aria-hidden="true">🔇</span> <span class="lb">Activer les sons</span> (ambiance douce, de préférence au casque)</button></p>
           <p class="note" id="dailyDone" style="margin:12px 0 0"></p>
           <p class="note" id="bestScore" style="margin:4px 0 0"></p>
         </div>
@@ -73,9 +74,11 @@
               <div class="chips" id="chips"></div>
               <button class="link-btn" id="rtSkip" type="button">Je passe, montre-moi la réponse</button>
             </div>
+            <div class="fact hidden" id="factBox"><b>🗞️ Vrai de vrai</b><p id="factText"></p><a id="factSrc" href="#" target="_blank" rel="noopener noreferrer"></a></div>
             <div class="more hidden" id="more">
               <ul id="clues"></ul>
               <p class="tip" id="tipLine"></p>
+              <div class="protect hidden" id="protectBox"><b>🛡️ Pour te protéger</b><ul id="protectList"></ul></div>
             </div>
             <div class="sheet-actions">
               <button class="btn ghost hidden" id="btnMore" type="button">Comprendre en détail</button>
@@ -140,8 +143,10 @@
   </footer>
 
   <script src="data.js"></script>
+  <script src="data-plus.js"></script>
   <script src="../assets/illus.js"></script>
   <script src="../assets/mockups.js"></script>
+  <script src="../assets/sfx.js"></script>
   <script src="../assets/engine.js"></script>
 </body>
 </html>
