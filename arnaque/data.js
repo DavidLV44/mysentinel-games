@@ -8,7 +8,7 @@ window.GAME = {
   intro: "Un message arrive. Arnaque ou message légitime ? Tu as quelques secondes pour trancher, et on t'explique les indices à chaque fois.",
   question: "Alors, ton verdict ?",
   roundSize: 8,
-  channelLabels: { sms: "📱 SMS", email: "📧 E-mail", appel: "📞 Appel téléphonique", reseau: "💬 Message privé", annonce: "🏷️ Petite annonce", rue: "🚏 Dans la rue" },
+  channelLabels: { sms: "📱 SMS", email: "📧 E-mail", appel: "📞 Appel téléphonique", reseau: "💬 Message privé", annonce: "🏷️ Petite annonce", rue: "🚏 Dans la rue", video: "🎥 Appel vidéo", enceinte: "🔊 Enceinte connectée", appli: "📲 Notification d'application" },
   answerKeys: ["arnaque", "legit"],
   answerLabels: ["Arnaque !", "Légitime"],
   answerButtons: ["🚨 Arnaque", "✅ Légitime"],
@@ -224,6 +224,48 @@ window.GAME = {
       explain: "Message attendu si tu as passé commande à ta pharmacie : il ne demande aucun paiement en ligne ni donnée, et te donne un retrait en magasin.",
       clues: ["Tu connais la pharmacie et ta commande", "Retrait au comptoir, pas de lien", "Aucune demande de paiement ni d'identifiants"],
       tip: "En cas de doute, appelle la pharmacie au numéro que tu connais."
+    },
+    {
+      img: "deepfake", channel: "video", from: "Numéro inconnu", answer: "arnaque",
+      body: "Appel vidéo en direct. À l'écran, ton fils, les yeux rouges, la voix un peu hachée : « Papa, j'ai perdu mon passeport et mon téléphone à l'étranger, je suis chez quelqu'un qui m'aide. Il me faut 800 € tout de suite, je te rembourse dès que je rentre. »",
+      explain: "Grâce à l'IA, il devient possible de copier une voix et un visage à partir de courtes vidéos publiées en ligne. Ici, l'émotion sert à t'empêcher de vérifier.",
+      clues: ["Appel depuis un numéro que tu ne connais pas", "Urgence et détresse pour que tu ne réfléchisses pas", "Demande de virement immédiat", "Image ou son légèrement saccadés"],
+      tip: "Raccroche et rappelle ton proche sur son vrai numéro. Convenez à l'avance d'un mot de code familial que seuls vous connaissez."
+    },
+    {
+      img: "maisonco", channel: "enceinte", from: "Voix sur ton enceinte connectée", answer: "arnaque",
+      body: "Tout à coup, ton enceinte diffuse en boucle : « Votre maison est verrouillée. Le chauffage est coupé. Pour retrouver l'accès, payez 0,05 bitcoin à l'adresse affichée dans votre application. Vous avez 24 heures. »",
+      explain: "Scénario encore rare mais plausible : une faille dans un routeur ou un objet connecté mal protégé donne le contrôle à un pirate, qui réclame une rançon.",
+      clues: ["Menace sur ton confort et ta sécurité", "Paiement exigé en cryptomonnaie", "Délai très court pour te pousser à payer"],
+      tip: "Ne paie jamais. Débranche ta box, change tous les mots de passe, mets les appareils à jour et signale-le sur cybermalveillance.gouv.fr. Un mot de passe unique par appareil réduit le risque."
+    },
+    {
+      img: "extensionia", channel: "email", from: "NovaAI Team <upgrade@novaai-premium-offres.example>", subject: "Passez à NovaAI Premium Ultra, 3 fois plus rapide", answer: "arnaque",
+      body: "Bonjour,\n\nNovaAI lance sa version Premium Ultra, réservée aux premiers inscrits. Installez dès maintenant l'extension officielle et gagnez 3 heures par jour :\n\n[[Installer l'extension Premium Ultra]]\n\nOffre limitée aux 500 premiers utilisateurs.",
+      explain: "Fausse mise à niveau d'un outil d'IA populaire : l'extension fonctionne au début mais peut enregistrer tes frappes et voler tes mots de passe.",
+      clues: ["Message non sollicité qui joue sur la peur de rater une innovation", "Adresse d'expéditeur différente du vrai site", "Places limitées et installation hors boutique officielle"],
+      tip: "Installe les extensions seulement depuis la boutique officielle du navigateur ou le site du service, ouvert par toi, et regarde toujours les autorisations demandées."
+    },
+    {
+      img: "coeur", channel: "reseau", from: "Élise (rencontrée sur une appli de rencontre)", answer: "arnaque",
+      body: "Mon amour, après tous ces mois à se parler chaque soir, tu es la seule personne en qui j'ai confiance. La banque va saisir la maison de ma mère malade. Il me manque 3 000 € avant vendredi. Je te rembourserai, je te le jure. Ne le dis à personne, ça me fait trop honte.",
+      explain: "Arnaque aux sentiments : certains profils sont désormais pilotés par une IA capable de t'écouter pendant des mois et d'adapter ses réponses, avant d'inventer un drame financier.",
+      clues: ["Relation uniquement à distance, jamais de rencontre", "Drame financier soudain après des mois de confiance", "Demande d'argent et de secret"],
+      tip: "N'envoie jamais d'argent à quelqu'un que tu n'as jamais rencontré. Propose un appel vidéo en direct et fais une recherche d'image inversée sur ses photos."
+    },
+    {
+      img: "identite", channel: "email", from: "Crédit Rivage <gestion@credit-rivage-conso.example>", subject: "Confirmation de votre contrat de crédit n° 70418", answer: "legit",
+      body: "Bonjour,\n\nNous vous confirmons la souscription d'un crédit à la consommation de 6 000 €, avec une première mensualité de 189 € le 5 du mois prochain.\n\nSi vous n'êtes pas à l'origine de cette demande, contactez immédiatement notre service client via les coordonnées figurant sur notre site officiel.\n\nCrédit Rivage",
+      explain: "Le message est sans lien piégé et renvoie vers les coordonnées officielles. Mais si tu n'as rien signé, c'est un signal grave : quelqu'un a peut-être utilisé ton identité (identité synthétique à partir de données volées).",
+      clues: ["Aucune demande de mot de passe ni lien à cliquer", "Renvoi vers les coordonnées officielles", "Contrat dont tu n'as aucun souvenir"],
+      tip: "Contacte l'organisme par ses coordonnées officielles, dépose plainte, garde les preuves et fais-toi orienter par cybermalveillance.gouv.fr. Ne communique ta pièce d'identité qu'aux organismes que tu connais."
+    },
+    {
+      img: "maj", channel: "appli", from: "Appli de ton opérateur", answer: "legit",
+      body: "Une mise à jour de sécurité est disponible pour ta box. Ouvre l'application de ton opérateur, rubrique « Ma box », pour l'installer à un moment qui te convient.",
+      explain: "Ce message te demande d'ouvrir toi-même l'appli officielle que tu as déjà installée. Il n'y a ni lien externe, ni urgence, ni demande de données.",
+      clues: ["Notification dans une appli que tu connais", "Pas de lien externe", "Aucune urgence, aucune demande d'argent"],
+      tip: "Les mises à jour de tes appareils connectés sont ta meilleure protection. Active-les, mais lance-les toujours depuis l'appli ou le menu officiel."
     }
   ]
 };
