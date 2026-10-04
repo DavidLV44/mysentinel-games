@@ -164,3 +164,17 @@ footer a { color: var(--muted); }
 @media (min-width: 640px) {
   .game-grid { grid-template-columns: 1fr 1fr; }
 }
+
+/* Illustrations */
+.illus { margin: 0 0 14px; }
+.illus svg { display: block; width: 100%; max-width: 280px; height: auto; margin: 0 auto; border-radius: 16px; }
+.illus .ibg { fill: var(--teal-soft); }
+.illus .ifill { fill: var(--teal); }
+.illus .isoft { fill: var(--card); }
+.illus .isoft2 { fill: var(--teal-dark); opacity: .55; }
+.illus .iacc { fill: #f0a500; }
+.illus .iline { fill: none; stroke: var(--teal); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.illus .iline.thick { stroke-width: 5; }
+.illus .iline.light { stroke: var(--card); }
+.illus .itxt { font: 700 16px "Roboto", system-ui, sans-serif; fill: var(--text); }
+.illus .itxt.big { font-size: 22px; }

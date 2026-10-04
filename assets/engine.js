@@ -76,7 +76,9 @@
     $("#count").textContent = "Question " + (idx + 1) + " / " + deck.length;
     $("#modeLabel").textContent = mode === "daily" ? "Partie du jour" : "Partie libre";
     var cls = q.channel === "sms" ? "sms" : q.channel === "appel" ? "call" : q.channel === "rue" ? "street" : "";
-    var html = '<div class="channel">' + esc(G.channelLabels[q.channel] || q.channel) + "</div>";
+    var html = "";
+    if (q.img && window.ILLUS && window.ILLUS[q.img]) html += '<div class="illus">' + window.ILLUS[q.img] + "</div>";
+    html += '<div class="channel">' + esc(G.channelLabels[q.channel] || q.channel) + "</div>";
     html += '<div class="message ' + cls + '">';
     if (q.from) html += '<div class="from">' + esc(q.from) + "</div>";
     if (q.subject) html += '<div class="subject">' + esc(q.subject) + "</div>";
