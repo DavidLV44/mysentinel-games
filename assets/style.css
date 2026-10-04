@@ -1,0 +1,166 @@
+/* MySentinel Games — feuille de style commune
+   Identité : minimaliste, Roboto, vert #008080, coins arrondis, ombres douces */
+
+:root {
+  --teal: #008080;
+  --teal-dark: #005f5f;
+  --teal-soft: #e6f4f4;
+  --bg: #f6f9f9;
+  --card: #ffffff;
+  --text: #1c2b2b;
+  --muted: #5a6e6e;
+  --line: #dbe7e7;
+  --danger: #c0392b;
+  --danger-soft: #fdecea;
+  --ok: #1e8e5a;
+  --ok-soft: #e7f6ee;
+  --radius: 16px;
+  --shadow: 0 6px 24px rgba(0, 60, 60, 0.08);
+  --shadow-sm: 0 2px 8px rgba(0, 60, 60, 0.07);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --teal: #2ab0b0;
+    --teal-dark: #4cc6c6;
+    --teal-soft: #12302f;
+    --bg: #0d1717;
+    --card: #152323;
+    --text: #e8f2f2;
+    --muted: #9bb2b2;
+    --line: #26403f;
+    --danger: #ff7a6b;
+    --danger-soft: #3a1c19;
+    --ok: #4fd18f;
+    --ok-soft: #14301f;
+    --shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+h1, h2, h3 { font-weight: 700; line-height: 1.2; margin: 0 0 .5em; }
+h1 { font-size: clamp(1.7rem, 5vw, 2.4rem); }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.1rem; }
+p { margin: 0 0 1em; }
+a { color: var(--teal-dark); }
+
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+
+/* En-tête */
+.topbar { background: var(--card); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; padding-bottom: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); text-decoration: none; }
+.brand-logo {
+  width: 32px; height: 32px; border-radius: 10px; background: var(--teal);
+  display: grid; place-items: center; color: #fff; font-size: 18px;
+}
+.topbar nav a { font-size: .95rem; text-decoration: none; margin-left: 14px; color: var(--muted); }
+.topbar nav a:hover { color: var(--teal-dark); }
+
+/* Cartes */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  margin: 18px 0;
+}
+.card.soft { background: var(--teal-soft); box-shadow: none; }
+
+.hero { padding: 36px 0 12px; }
+.hero p { color: var(--muted); font-size: 1.05rem; max-width: 36em; }
+
+.game-grid { display: grid; gap: 16px; }
+.game-card { display: block; text-decoration: none; color: inherit; }
+.game-card .emoji { font-size: 2rem; }
+.game-card.disabled { opacity: .6; }
+.tag {
+  display: inline-block; font-size: .78rem; font-weight: 700; letter-spacing: .03em;
+  text-transform: uppercase; padding: 3px 10px; border-radius: 999px;
+  background: var(--teal-soft); color: var(--teal-dark);
+}
+
+/* Boutons */
+.btn {
+  appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 700;
+  padding: 14px 22px; border-radius: 14px; background: var(--teal); color: #fff;
+  box-shadow: var(--shadow-sm); transition: transform .1s ease, background .15s ease;
+  text-decoration: none; display: inline-block; text-align: center;
+}
+.btn:hover { background: var(--teal-dark); }
+.btn:active { transform: scale(.98); }
+.btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.btn.secondary { background: var(--card); color: var(--teal-dark); border: 2px solid var(--teal); box-shadow: none; }
+.btn.danger { background: var(--danger); }
+.btn.ok { background: var(--ok); }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-row .btn { flex: 1 1 160px; }
+
+/* Jeu */
+.progress { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; margin: 14px 0 6px; }
+.progress > span { display: block; height: 100%; background: var(--teal); width: 0; transition: width .3s ease; }
+.meta { display: flex; justify-content: space-between; font-size: .9rem; color: var(--muted); }
+
+.channel { font-size: .85rem; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+.message {
+  border: 1px solid var(--line); border-radius: 14px; padding: 16px; background: var(--bg);
+  margin-bottom: 18px; word-wrap: break-word;
+}
+.message .from { font-weight: 700; font-size: .95rem; }
+.message .subject { font-weight: 700; margin: 4px 0 10px; }
+.message .body { white-space: pre-line; }
+.message.sms { border-radius: 18px 18px 18px 4px; background: var(--teal-soft); }
+.message.call { border-left: 6px solid var(--teal); }
+.message.street { border-style: dashed; }
+.fakelink { color: var(--teal-dark); text-decoration: underline; cursor: not-allowed; word-break: break-all; }
+
+.question { font-weight: 700; margin-bottom: 12px; }
+
+.feedback { border-radius: 14px; padding: 16px; margin-top: 18px; }
+.feedback.good { background: var(--ok-soft); border: 1px solid var(--ok); }
+.feedback.bad { background: var(--danger-soft); border: 1px solid var(--danger); }
+.feedback h3 { margin-bottom: .4em; }
+.feedback ul { margin: .4em 0 .8em 1.1em; padding: 0; }
+.feedback .tip { font-weight: 700; color: var(--teal-dark); }
+.hidden { display: none !important; }
+
+/* Résultat */
+.score { font-size: 3rem; font-weight: 700; color: var(--teal-dark); line-height: 1; }
+.grid-emoji { font-size: 1.6rem; letter-spacing: 2px; margin: 10px 0; }
+
+/* Encarts */
+.affil {
+  border: 1px dashed var(--teal); border-radius: 14px; padding: 16px; margin-top: 16px; background: var(--card);
+}
+.affil small, .note { color: var(--muted); font-size: .85rem; }
+
+/* Newsletter */
+.nl-form { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.nl-form input[type=email] {
+  flex: 1 1 220px; padding: 14px; border-radius: 14px; border: 1px solid var(--line);
+  font: inherit; background: var(--card); color: var(--text);
+}
+.nl-consent { display: flex; gap: 8px; align-items: flex-start; font-size: .85rem; color: var(--muted); margin-top: 10px; }
+.nl-consent input { margin-top: 3px; }
+
+footer { padding: 24px 0 40px; font-size: .85rem; color: var(--muted); }
+footer a { color: var(--muted); }
+
+@media (min-width: 640px) {
+  .game-grid { grid-template-columns: 1fr 1fr; }
+}

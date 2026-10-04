@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arnaque ou pas ? — MySentinel Games</title>
+  <meta name="description" content="Saurais-tu repérer une arnaque ? Teste-toi gratuitement avec des SMS, mails et appels fictifs, et apprends les bons réflexes.">
+  <meta name="theme-color" content="#008080">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="icon" href="../assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="../"><span class="brand-logo">🛡️</span> MySentinel Games</a>
+      <nav><a href="../">Tous les jeux</a></nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="screen-intro" class="hero">
+      <span class="tag">Gratuit · 2 minutes</span>
+      <h1 id="gameTitle">Arnaque ou pas ?</h1>
+      <p id="gameIntro"></p>
+      <div class="card">
+        <p class="note">🔒 Tous les messages du jeu sont fictifs. Aucun lien n'est cliquable, aucune donnée personnelle n'est demandée.</p>
+        <div class="btn-row">
+          <button class="btn" id="btnDaily">▶️ Partie du jour</button>
+          <button class="btn secondary" id="btnFree">🎲 Partie libre</button>
+        </div>
+        <p class="note" id="dailyDone" style="margin-top:12px"></p>
+        <p class="note" id="bestScore"></p>
+      </div>
+    </section>
+
+    <section id="screen-game" class="hidden" aria-live="polite">
+      <div class="progress"><span id="bar"></span></div>
+      <div class="meta"><span id="count"></span><span id="modeLabel"></span></div>
+      <div class="card">
+        <div id="qcard"></div>
+        <div id="answers" class="btn-row">
+          <button class="btn danger" id="ansA"></button>
+          <button class="btn ok" id="ansB"></button>
+        </div>
+        <div id="feedback" class="feedback hidden"></div>
+        <p style="margin-top:16px"><button class="btn hidden" id="next">Question suivante →</button></p>
+      </div>
+    </section>
+
+    <section id="screen-result" class="hidden">
+      <div class="card" style="text-align:center">
+        <div class="score" id="resScore"></div>
+        <h2 id="resRank" style="margin-top:10px"></h2>
+        <p id="resText"></p>
+        <div class="grid-emoji" id="resGrid"></div>
+        <div class="btn-row">
+          <button class="btn" id="btnShare">📤 Partager mon score</button>
+          <button class="btn secondary" id="btnReplay">🎲 Rejouer</button>
+        </div>
+      </div>
+
+      <div class="card soft">
+        <h3>📬 Le Sentinelle de la semaine</h3>
+        <p>Chaque semaine, une arnaque du moment décortiquée et un bon réflexe à retenir. Gratuit, désinscription en un clic.</p>
+        <form class="nl nl-form" method="post" data-action="">
+          <input type="email" name="email" required placeholder="ton@email.fr" aria-label="Ton adresse e-mail">
+          <button class="btn" type="submit">Je m'abonne</button>
+          <label class="nl-consent" style="flex-basis:100%">
+            <input type="checkbox" required>
+            <span>J'accepte de recevoir la newsletter MySentinel. Mon e-mail ne sert qu'à cela (<a href="../mentions.html">en savoir plus</a>).</span>
+          </label>
+        </form>
+      </div>
+
+      <div id="affil" class="affil hidden"></div>
+
+      <div class="card">
+        <h3>🧠 Les 4 réflexes à retenir</h3>
+        <ul>
+          <li><strong>Stop :</strong> l'urgence est l'arme préférée des arnaqueurs.</li>
+          <li><strong>Vérifie :</strong> passe par l'appli ou le site officiel, tapé toi-même.</li>
+          <li><strong>Ne donne jamais</strong> un code reçu par SMS, un mot de passe ou ton code de carte.</li>
+          <li><strong>Signale :</strong> transfère les SMS suspects au 33700 et consulte cybermalveillance.gouv.fr si tu as un doute.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <div id="flash" class="card hidden" style="position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;text-align:center"></div>
+
+  <footer>
+    <div class="wrap">
+      <p>Jeu à but pédagogique. Ce contenu ne remplace pas un avis professionnel. <a href="../mentions.html">Mentions légales et confidentialité</a></p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="../assets/engine.js"></script>
+</body>
+</html>
