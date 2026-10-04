@@ -178,3 +178,7 @@ footer a { color: var(--muted); }
 .illus .iline.light { stroke: var(--card); }
 .illus .itxt { font: 700 16px "Roboto", system-ui, sans-serif; fill: var(--text); }
 .illus .itxt.big { font-size: 22px; }
+
+.photo { margin: 0 0 14px; }
+.photo img { display: block; width: 100%; max-height: 220px; object-fit: cover; border-radius: 16px; background: var(--teal-soft); }
+.photo figcaption { font-size: .75rem; color: var(--muted); margin-top: 4px; }

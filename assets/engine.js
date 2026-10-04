@@ -77,7 +77,14 @@
     $("#modeLabel").textContent = mode === "daily" ? "Partie du jour" : "Partie libre";
     var cls = q.channel === "sms" ? "sms" : q.channel === "appel" ? "call" : q.channel === "rue" ? "street" : "";
     var html = "";
-    if (q.img && window.ILLUS && window.ILLUS[q.img]) html += '<div class="illus">' + window.ILLUS[q.img] + "</div>";
+    var fallback = (q.img && window.ILLUS && window.ILLUS[q.img]) ? window.ILLUS[q.img] : "";
+    if (q.photo) {
+      // Photo libre de droits si le fichier existe (assets/photos/), sinon repli sur le pictogramme.
+      html += '<figure class="photo" data-fallback="' + esc(q.img || "") + '"><img src="../assets/photos/' + esc(q.photo.file) + '" alt="' + esc(q.photo.alt || "") + '" loading="lazy">' +
+        (q.photo.credit ? "<figcaption>" + esc(q.photo.credit) + "</figcaption>" : "") + "</figure>";
+    } else if (fallback) {
+      html += '<div class="illus">' + fallback + "</div>";
+    }
     html += '<div class="channel">' + esc(G.channelLabels[q.channel] || q.channel) + "</div>";
     html += '<div class="message ' + cls + '">';
     if (q.from) html += '<div class="from">' + esc(q.from) + "</div>";
@@ -85,6 +92,12 @@
     html += '<div class="body">' + fmtBody(q) + "</div></div>";
     html += '<p class="question">' + esc(G.question) + "</p>";
     $("#qcard").innerHTML = html;
+    var ph = document.querySelector("#qcard figure.photo img");
+    if (ph) ph.addEventListener("error", function () {
+      var fig = ph.parentNode, k = fig.getAttribute("data-fallback");
+      if (window.ILLUS && window.ILLUS[k]) { var d = document.createElement("div"); d.className = "illus"; d.innerHTML = window.ILLUS[k]; fig.parentNode.replaceChild(d, fig); }
+      else fig.parentNode.removeChild(fig);
+    });
     $("#feedback").classList.add("hidden");
     $("#answers").classList.remove("hidden");
     $("#next").classList.add("hidden");
