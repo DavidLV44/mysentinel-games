@@ -2,75 +2,115 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Arnaque ou pas ? — MySentinel Games</title>
-  <meta name="description" content="Saurais-tu repérer une arnaque ? Teste-toi gratuitement avec des SMS, mails et appels fictifs, et apprends les bons réflexes.">
+  <meta name="description" content="Saurais-tu repérer une arnaque ? Teste-toi gratuitement avec de vrais écrans de SMS, mails et appels fictifs, et apprends les bons réflexes.">
   <meta name="theme-color" content="#008080">
   <link rel="manifest" href="../manifest.webmanifest">
   <link rel="icon" href="../assets/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
   <header class="topbar">
     <div class="wrap">
-      <a class="brand" href="../"><span class="brand-logo">🛡️</span> MySentinel Games</a>
+      <a class="brand" href="../"><svg class="brand-logo" viewBox="0 0 100 110" aria-hidden="true"><path d="M50 6l38 13v30c0 28-17 46-38 55C29 95 12 77 12 49V19z" fill="#008080"/><path d="M50 14l30 10v25c0 22-13 37-30 45C33 86 20 71 20 49V24z" fill="#e6f4f4"/><ellipse cx="38" cy="44" rx="4.5" ry="5.5" fill="#0b3b3b"/><ellipse cx="62" cy="44" rx="4.5" ry="5.5" fill="#0b3b3b"/><path d="M38 56q12 12 24 0" fill="none" stroke="#0b3b3b" stroke-width="3.5" stroke-linecap="round"/></svg> MySentinel Games</a>
       <nav><a href="../">Tous les jeux</a></nav>
     </div>
   </header>
 
   <main class="wrap">
     <section id="screen-intro" class="hero">
-      <span class="tag">Gratuit · 2 minutes</span>
-      <h1 id="gameTitle">Arnaque ou pas ?</h1>
-      <p id="gameIntro"></p>
-      <div class="card">
-        <p class="note">🔒 Tous les messages du jeu sont fictifs. Aucun lien n'est cliquable, aucune donnée personnelle n'est demandée.</p>
-        <div class="btn-row">
-          <button class="btn" id="btnDaily">▶️ Partie du jour</button>
-          <button class="btn secondary" id="btnFree">🎲 Partie libre</button>
+      <div>
+        <span class="tag">Gratuit · 2 minutes</span>
+        <h1 id="gameTitle" style="margin-top:10px">Arnaque ou pas ?</h1>
+        <p id="gameIntro"></p>
+        <div class="card">
+          <h3>Ton niveau</h3>
+          <p class="note" style="margin-bottom:0">On adapte les explications. Tu peux changer à tout moment.</p>
+          <div class="levels" role="radiogroup" aria-label="Ton niveau">
+            <label class="lvl"><input type="radio" name="level" value="debutant"><span><b>🌱 Débutant</b><small>Je prends mon temps, explique-moi tout</small></span></label>
+            <label class="lvl"><input type="radio" name="level" value="inter" checked><span><b>🔍 Je me débrouille</b><small>L'essentiel, le détail si je veux</small></span></label>
+            <label class="lvl"><input type="radio" name="level" value="expert"><span><b>🛡️ Costaud</b><small>Va droit au but</small></span></label>
+          </div>
+          <div class="btn-row" style="margin-top:14px">
+            <button class="btn pulse" id="btnDaily" type="button">Partie du jour</button>
+            <button class="btn secondary" id="btnFree" type="button">Partie libre</button>
+          </div>
+          <p class="note" id="dailyDone" style="margin:12px 0 0"></p>
+          <p class="note" id="bestScore" style="margin:4px 0 0"></p>
         </div>
-        <p class="note" id="dailyDone" style="margin-top:12px"></p>
-        <p class="note" id="bestScore"></p>
+        <p class="note">🔒 Tous les messages sont fictifs : aucun lien ne s'ouvre, aucune donnée n'est demandée. Un coup de pouce ou un rattrapage après une erreur te laisse un demi-point.</p>
       </div>
     </section>
 
-    <section id="screen-game" class="hidden" aria-live="polite">
-      <div class="progress"><span id="bar"></span></div>
-      <div class="meta"><span id="count"></span><span id="modeLabel"></span></div>
-      <div class="card">
-        <div id="qcard"></div>
-        <div id="answers" class="btn-row">
-          <button class="btn danger" id="ansA"></button>
-          <button class="btn ok" id="ansB"></button>
+    <section id="screen-game" class="hidden">
+      <div class="hud">
+        <div class="dots" id="dots" role="img"></div>
+        <div class="hud-right"><span id="streak" class="streak hidden">🔥 <span id="streakN">0</span></span><span id="modeLabel"></span></div>
+      </div>
+      <div class="stage">
+        <div class="phone-wrap" id="phoneWrap"></div>
+        <div class="panel" id="panel">
+          <div id="askBox">
+            <p class="q-label" id="qLabel">Alors, ton verdict ?</p>
+            <div class="answers">
+              <button class="btn ans scam" id="ansA" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2zM11 10h2v5h-2zm0 6h2v2h-2z"/></svg><span>Arnaque</span></button>
+              <button class="btn ans legit" id="ansB" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l9 3v6c0 5-3.8 9.3-9 11-5.2-1.7-9-6-9-11V5zm-1.3 13.6l6-6-1.4-1.4-4.6 4.6-2-2-1.4 1.4z"/></svg><span>Légitime</span></button>
+            </div>
+            <div class="hint-row"><button class="btn ghost" id="btnHint" type="button">🔍 Un coup de pouce (−½ point)</button></div>
+            <div id="hintBox" class="hidden"></div>
+          </div>
+          <div id="sheet" class="hidden">
+            <div class="coach">
+              <div class="mascot" id="mascot"></div>
+              <div class="coach-bubble"><b id="coachHead"></b><p id="coachText"></p></div>
+            </div>
+            <div class="rattrap hidden" id="rattrap">
+              <p id="rtQ"></p>
+              <div class="chips" id="chips"></div>
+              <button class="link-btn" id="rtSkip" type="button">Je passe, montre-moi la réponse</button>
+            </div>
+            <div class="more hidden" id="more">
+              <ul id="clues"></ul>
+              <p class="tip" id="tipLine"></p>
+            </div>
+            <div class="sheet-actions">
+              <button class="btn ghost hidden" id="btnMore" type="button">Comprendre en détail</button>
+              <button class="btn hidden" id="next" type="button">Question suivante</button>
+            </div>
+          </div>
         </div>
-        <div id="feedback" class="feedback hidden"></div>
-        <p style="margin-top:16px"><button class="btn hidden" id="next">Question suivante →</button></p>
       </div>
     </section>
 
-    <section id="screen-result" class="hidden">
-      <div class="card" style="text-align:center">
-        <div class="score" id="resScore"></div>
-        <h2 id="resRank" style="margin-top:10px"></h2>
+    <section id="screen-result" class="hidden wrap narrow" style="padding:0">
+      <div class="card result-card">
+        <div class="score"><span id="resScoreN">0</span><span id="resTotal"></span></div>
+        <h2 id="resRank" style="margin-top:12px"></h2>
         <p id="resText"></p>
-        <div class="grid-emoji" id="resGrid"></div>
+        <div class="grid-emoji" id="resGrid" aria-label="Détail de ta partie"></div>
         <div class="btn-row">
-          <button class="btn" id="btnShare">📤 Partager mon score</button>
-          <button class="btn secondary" id="btnReplay">🎲 Rejouer</button>
+          <button class="btn" id="btnShare" type="button">Partager mon score</button>
+          <button class="btn secondary" id="btnReplay" type="button">Rejouer</button>
         </div>
+      </div>
+
+      <div class="card" id="recapBox">
+        <h3>À retenir de cette partie</h3>
+        <ul class="recap" id="recap"></ul>
       </div>
 
       <div class="card soft">
         <h3>📬 Le Sentinelle de la semaine</h3>
         <p>Chaque semaine, une arnaque du moment décortiquée et un bon réflexe à retenir. Gratuit, désinscription en un clic.</p>
         <form class="nl nl-form" method="post" data-action="">
-          <input type="email" name="email" required placeholder="ton@email.fr" aria-label="Ton adresse e-mail">
+          <input type="email" id="nlEmail" name="email" required placeholder="ton@email.fr" aria-label="Ton adresse e-mail">
           <button class="btn" type="submit">Je m'abonne</button>
           <label class="nl-consent" style="flex-basis:100%">
-            <input type="checkbox" required>
+            <input type="checkbox" id="nlConsent" required>
             <span>J'accepte de recevoir la newsletter MySentinel. Mon e-mail ne sert qu'à cela (<a href="../mentions.html">en savoir plus</a>).</span>
           </label>
         </form>
@@ -81,16 +121,17 @@
       <div class="card">
         <h3>🧠 Les 4 réflexes à retenir</h3>
         <ul>
-          <li><strong>Stop :</strong> l'urgence est l'arme préférée des arnaqueurs.</li>
-          <li><strong>Vérifie :</strong> passe par l'appli ou le site officiel, tapé toi-même.</li>
-          <li><strong>Ne donne jamais</strong> un code reçu par SMS, un mot de passe ou ton code de carte.</li>
-          <li><strong>Signale :</strong> transfère les SMS suspects au 33700 et consulte cybermalveillance.gouv.fr si tu as un doute.</li>
+          <li><b>Stop :</b> l'urgence est l'arme préférée des arnaqueurs.</li>
+          <li><b>Vérifie :</b> passe par l'appli ou le site officiel, tapé toi-même.</li>
+          <li><b>Ne donne jamais</b> un code reçu par SMS, un mot de passe ou ton code de carte.</li>
+          <li><b>Signale :</b> transfère les SMS suspects au 33700 et consulte cybermalveillance.gouv.fr si tu as un doute.</li>
         </ul>
       </div>
     </section>
   </main>
 
-  <div id="flash" class="card hidden" style="position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;text-align:center"></div>
+  <canvas id="fx" aria-hidden="true"></canvas>
+  <div id="toast" class="toast hidden" role="status"></div>
 
   <footer>
     <div class="wrap">
@@ -100,6 +141,7 @@
 
   <script src="data.js"></script>
   <script src="../assets/illus.js"></script>
+  <script src="../assets/mockups.js"></script>
   <script src="../assets/engine.js"></script>
 </body>
 </html>
